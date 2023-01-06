@@ -76,11 +76,12 @@ void *thread_function(void *arguments) {
    }
 }
 
-int main() {
+int main(int argc, const char **argv) {
 int n, i, j;
-cout << "Введите количество потоков: ";
+//cout << "Введите количество потоков: ";
 int count_threads;
-cin >> count_threads;
+count_threads = atoi(argv[1]);
+//cin >> count_threads;
 cout << "Введите порядок матрицы:\n";
 cin >> n;
 vector<vector<int>> matrix(n, vector <int> (n) );
@@ -92,14 +93,9 @@ cin >> matrix[i][j];
 chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 vector<int> minors(n, 0);
 pthread_t threads[count_threads];
-int status;
 for (int i = 0; i < count_threads; ++i) {
    arg args = {i, count_threads, n, &minors, &matrix};
-   status = pthread_create(&threads[i], NULL, thread_function, &args);
-   if (status != 0) {
-        printf("main error: can't create thread, status = %d\n", status);
-        exit(1);
-    }
+   pthread_create(&threads[i], NULL, thread_function, &args);
    while (flag == 0) {
    }
    flag = 0;
